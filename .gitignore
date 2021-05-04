@@ -1,0 +1,17 @@
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Jetbrains
+.idea/
+
+# macOS
+.DS_Store
+
+# datasets
+datasets/
+
+# opencv test
+opencv-master/
+
+# Do not commit
+dncmt/
