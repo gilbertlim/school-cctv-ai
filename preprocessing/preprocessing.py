@@ -141,8 +141,8 @@ class Preprocessing:
                 if not os.path.isdir(dir_clip):
                     os.mkdir(dir_clip)
 
-                new_path = dir_clip + self.v_path.split('/')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4'
-                # new_path = dir_clip + self.v_path.split('\\')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4' # window OS example
+                new_path = dir_clip + self.v_path.split('/')[-3] + '_' + self.v_path.split('/')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4'
+                # new_path = dir_clip + self.v_path.split('/')[-3] + '_' + self.v_path.split('\\')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4' # window OS example
 
                 if not os.path.isfile(new_path):
                     clip.write_videofile(new_path)
