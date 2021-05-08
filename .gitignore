@@ -9,6 +9,7 @@
 
 # datasets
 datasets/
+action_clips/
 
 # opencv test
 opencv-master/

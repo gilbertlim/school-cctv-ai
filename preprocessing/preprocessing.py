@@ -123,8 +123,10 @@ class Preprocessing:
             for s, e in self.act_s_e[idx]:
                 # print(idx, s, e)
 
+                width, height = 640, 480
+
                 clip = (VideoFileClip(self.v_path,
-                                      target_resolution=(720, 1280),  # Resize
+                                      target_resolution=(height, width),  # Resize
                                       resize_algorithm='lanczos',
                                       audio=False)
                         .subclip(int(s)/30, int(e)/30)  # trim
@@ -132,32 +134,55 @@ class Preprocessing:
                         )
 
                 # Clipping
-                new_path = self.v_path.split('.')[0] + '_clipped_action_' + an + '_' + s + '_' + e +'(720p)' + '.mp4'
+                dir_clip = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/action_clips/'
+
+                if not os.path.isdir(dir_clip):
+                    os.mkdir(dir_clip)
+
+                new_path = dir_clip + self.v_path.split('/')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4'
+
                 if not os.path.isfile(new_path):
                     clip.write_videofile(new_path)
-                print('-> video already modified...{}' .format(cnt))
-                print()
-                cnt += 1
+                else:
+                    print('-> video already modified...{}' .format(cnt))
+                    print()
+
+                # cnt += 1
 
 
 def definePath():
     # 절대 경로
-    absolute_path = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI'
-    # 비디오 파일 경로
-    video_path = '/datasets/insidedoor_01/10-1/10-1_cam01_assault03_place07_night_spring.mp4'
+    absolute_path = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/datasets/'
+    root_dir = glob.glob(absolute_path + '*')
 
-    return absolute_path + video_path
+    sub_dir = []
+    for rd in root_dir:
+        sub_dir.append(glob.glob(rd +'/*'))
+
+    videos = []
+    for video_xml in sub_dir:
+        for vx in video_xml:
+            videos += glob.glob(vx + '/*')
+
+    videos = [v for v in videos if v.endswith('spring.mp4')]
+
+    return videos
 
 
 def main():
-    prep = Preprocessing(definePath()) # 인스턴스 생성
+    video_path = definePath()
+    for v in video_path:
+        prep = Preprocessing(v) # 인스턴스 생성
 
-    prep.printVideoMeta() # 메타 데이터 출력
-    prep.printParsedData() # Parsing Annotation
+        prep.trimmingVideoAction() # 행동이 있는 부분을 모두 추출하여 저장
+        # prep.trimmingVideoEvent() # 이벤트가 있는 부분만 추출하여 저장
 
-    # prep.readAndShowVideo() # 비디오 재생
-
-    # prep.trimmingVideoEvent() # 이벤트가 있는 부분만 추출
-    prep.trimmingVideoAction() # 행동이 있는 부분을 모두 추출
 
 main()
+
+
+# prep = Preprocessing('/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/datasets/insidedoor_01/10-1/10-1_cam03_assault03_place07_night_spring.mp4')
+
+# prep.readAndShowVideo() # 비디오 재생
+# prep.printVideoMeta() # 메타 데이터 출력
+# prep.printParsedData() # Parsing Annotation
