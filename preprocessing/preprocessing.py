@@ -1,8 +1,9 @@
 import cv2 # pip3 install opencv-python
 from moviepy.editor import *  # pip3 install moviepy
-from datetime import datetime, timedelta
-import xml.etree.ElementTree as et
-import glob
+from datetime import datetime, timedelta # 시간 관련 계산을 위한 라이브러리
+import xml.etree.ElementTree as et # xml 파일을 읽기 위한 라이브러리
+import glob # 폴더 내 파일 리스트를 읽기 위한 라이브러리
+import os
 
 class Preprocessing:
     def __init__(self, v_path):
@@ -135,11 +136,13 @@ class Preprocessing:
 
                 # Clipping
                 dir_clip = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/action_clips/'
+                # dir_clip = 'C:\\Users\\1672g\\Downloads\\datasets\\action_clips\\' # window OS example
 
                 if not os.path.isdir(dir_clip):
                     os.mkdir(dir_clip)
 
                 new_path = dir_clip + self.v_path.split('/')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4'
+                # new_path = dir_clip + self.v_path.split('\\')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4' # window OS example
 
                 if not os.path.isfile(new_path):
                     clip.write_videofile(new_path)
@@ -147,22 +150,26 @@ class Preprocessing:
                     print('-> video already modified...{}' .format(cnt))
                     print()
 
-                # cnt += 1
+                cnt += 1
 
 
 def definePath():
     # 절대 경로
     absolute_path = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/datasets/'
+    # absolute_path = 'C:\\Users\\1672g\\Downloads\\datasets\\' # window OS example
+
     root_dir = glob.glob(absolute_path + '*')
 
     sub_dir = []
     for rd in root_dir:
         sub_dir.append(glob.glob(rd +'/*'))
+        # sub_dir.append(glob.glob(rd +'\\*')) # window OS example
 
     videos = []
     for video_xml in sub_dir:
         for vx in video_xml:
             videos += glob.glob(vx + '/*')
+            # videos += glob.glob(vx + '\\*') # window OS example
 
     videos = [v for v in videos if v.endswith('spring.mp4')]
 
