@@ -136,13 +136,13 @@ class Preprocessing:
 
                 # Clipping
                 dir_clip = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/action_clips/'
-                # dir_clip = 'C:\\Users\\1672g\\Downloads\\datasets\\action_clips\\' # window OS example
+                # dir_clip = 'F:\\Convergence Project\\datasets\\action_clips\\' # window OS example
 
                 if not os.path.isdir(dir_clip):
                     os.mkdir(dir_clip)
 
                 new_path = dir_clip + self.v_path.split('/')[-3] + '_' + self.v_path.split('/')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4'
-                # new_path = dir_clip + self.v_path.split('/')[-3] + '_' + self.v_path.split('\\')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4' # window OS example
+                # new_path = dir_clip + self.v_path.split('\\')[-3] + '_' + self.v_path.split('\\')[-1][:-4] + '_Clipped_' + an + '_' + s + '_' + e + '(' + str(height) + 'p)' + '.mp4' # window OS example
 
                 if not os.path.isfile(new_path):
                     clip.write_videofile(new_path)
@@ -156,7 +156,7 @@ class Preprocessing:
 def definePath():
     # 절대 경로
     absolute_path = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/datasets/'
-    # absolute_path = 'C:\\Users\\1672g\\Downloads\\datasets\\' # window OS example
+    # absolute_path = 'F:\\Convergence Project\\datasets\\' # window OS example
 
     root_dir = glob.glob(absolute_path + '*')
 
