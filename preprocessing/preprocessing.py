@@ -125,14 +125,25 @@ class Preprocessing:
                 # print(idx, s, e)
 
                 width, height = 640, 480
+                if int(e) - int(s) >= 30:
+                    clip = (VideoFileClip(self.v_path,
+                                          target_resolution=(height, width),  # Resize
+                                          resize_algorithm='lanczos',
+                                          audio=False)
+                            .subclip(int(s)/30, int(e)/30)  # trim
+                            # .crop()
+                            )
+                else: # clip이 30프레임 미만일 경우, concatenate
+                    clip_list = []
+                    n = (30 // (int(e) - int(s))) + 1
+                    parent_clip = VideoFileClip(self.v_path,
+                                          target_resolution=(height, width),  # Resize
+                                          resize_algorithm='lanczos',
+                                          audio=False)
+                    for _ in range(n):
+                        clip_list.append(parent_clip.subclip(int(s) / 30, int(e) / 30))  # trim
+                    clip = concatenate_videoclips(clip_list)
 
-                clip = (VideoFileClip(self.v_path,
-                                      target_resolution=(height, width),  # Resize
-                                      resize_algorithm='lanczos',
-                                      audio=False)
-                        .subclip(int(s)/30, int(e)/30)  # trim
-                        # .crop()
-                        )
 
                 # Clipping
                 dir_clip = '/Users/gilbert/Developer/Project/3_Convergence/Dev_AI/action_clips/'
