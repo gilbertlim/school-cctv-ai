@@ -10,6 +10,7 @@
 # datasets
 datasets/
 action_clips/
+Videos/
 
 # opencv test
 opencv-master/
