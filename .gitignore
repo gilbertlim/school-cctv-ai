@@ -1,19 +1,29 @@
-# Jupyter Notebook
+# jupyter notebook
 .ipynb_checkpoints
+__pycache__
 
-# Jetbrains
+# jetbrains
 .idea/
 
-# macOS
+# mac os
 .DS_Store
 
 # datasets
 datasets/
-action_clips/
-Videos/
 
-# opencv test
-opencv-master/
+# preprocessing folder
+/pipeline/videos/
+/pipeline/json/
+/pipeline/openpose/
 
-# Do not commit
+# open pose
+openpose_for_mac.ipynb
+video.mp4
+openpose.avi
+output.mp4
+
+# do not commit
 dncmt/
+
+
+
