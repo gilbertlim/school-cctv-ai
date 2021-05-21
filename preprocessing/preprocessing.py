@@ -97,7 +97,7 @@ class Preprocessing:
         print()
 
     def trimmingVideoEvent(self): # event가 존재하는 부분만 clipping
-        print('Trim and Resize Videos by event...')
+        print('Trim and Resize videos by event...')
 
         clip = (VideoFileClip(self.v_path,
                               target_resolution=(720, 1280), # Resize
@@ -116,7 +116,7 @@ class Preprocessing:
         print()
 
     def trimmingVideoAction(self):
-        print('Trim and Resize Videos by action...')
+        print('Trim and Resize videos by action...')
         print()
 
         cnt = 1
