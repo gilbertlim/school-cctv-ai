@@ -4,15 +4,15 @@ import numpy as np
 import threading
 
 class Preprocessing(threading.Thread):
-    def __init__(self, json_paths):
+    def __init__(self, json_path):
         super().__init__()
-        self.json_paths = json_paths
+        self.json_paths = json_path
+        self.nf_joint = 36 # 18 joints X 2 dimension axis(x, y) = 36
 
     def extractJoints(self):
         result = []
 
         with open(self.json_paths, "r") as json_file:
-            # joint data 추출부
             json_object = json.load(json_file)
             json_array = json_object.get('people')  # joint 값 추출
 
@@ -28,27 +28,28 @@ class Preprocessing(threading.Thread):
 
         return result, nfpeople
 
+    def calculateAngle(self, a, j, c):
+        a = np.array(a)
+        j = np.array(j)
+        c = np.array(c)
+
+        a_j = a - j
+        c_j = c - j
+
+        th_a_j = math.atan2(a_j[1], a_j[0])
+        th_c_j = math.atan2(c_j[1], c_j[0])
+
+        return th_a_j - th_c_j
+
     def extractAngle(self, result, nfpeople):
         raw = []
         for nfp in range(nfpeople):
-            raw.append(result[(36 * nfp): (36 + (nfp * 36))])
-
-        def calculateAngle(a, j, c):
-            a = np.array(a)
-            j = np.array(j)
-            c = np.array(c)
-
-            a_j = a - j
-            c_j = c - j
-
-            th_a_j = math.atan2(a_j[1], a_j[0])
-            th_c_j = math.atan2(c_j[1], c_j[0])
-
-            return th_a_j - th_c_j
+            raw.append(result[(self.nf_joint * nfp): (self.nf_joint + (nfp * self.nf_joint))])
 
         angle = []
         for r in raw:
             neck = (r[2], r[3])
+
             r_shoulder = (r[4], r[5])
             r_elbow = (r[6], r[7])
             r_wrist = (r[8], r[9])
@@ -63,15 +64,15 @@ class Preprocessing(threading.Thread):
             l_knee = (r[24], r[25])
             l_ankle = (r[26], r[27])
 
-            ang_r_shoulder = calculateAngle(neck, r_shoulder, r_elbow)
-            ang_r_elbow = calculateAngle(r_shoulder, r_elbow, r_wrist)
-            ang_r_hip = calculateAngle(neck, r_hip, r_knee)
-            ang_r_knee = calculateAngle(r_hip, r_knee, r_ankle)
+            ang_r_shoulder = self.calculateAngle(neck, r_shoulder, r_elbow)
+            ang_r_elbow = self.calculateAngle(r_shoulder, r_elbow, r_wrist)
+            ang_r_hip = self.calculateAngle(neck, r_hip, r_knee)
+            ang_r_knee = self.calculateAngle(r_hip, r_knee, r_ankle)
 
-            ang_l_shoulder = calculateAngle(neck, l_shoulder, l_elbow)
-            ang_l_elbow = calculateAngle(l_shoulder, l_elbow, l_wrist)
-            ang_l_hip = calculateAngle(neck, l_hip, l_knee)
-            ang_l_knee = calculateAngle(l_hip, l_knee, l_ankle)
+            ang_l_shoulder = self.calculateAngle(neck, l_shoulder, l_elbow)
+            ang_l_elbow = self.calculateAngle(l_shoulder, l_elbow, l_wrist)
+            ang_l_hip = self.calculateAngle(neck, l_hip, l_knee)
+            ang_l_knee = self.calculateAngle(l_hip, l_knee, l_ankle)
 
             angle.append([ang_r_shoulder, ang_r_elbow, ang_r_hip, ang_r_knee, ang_l_shoulder, ang_l_elbow, ang_l_hip, ang_l_knee])
 
