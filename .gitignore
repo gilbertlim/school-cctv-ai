@@ -21,9 +21,8 @@ models/
 
 # open pose
 openpose_for_mac.ipynb
-video.mp4
-openpose.avi
-output.mp4
+*.mp4
+*.avi
 
 # yolo
 yolo/
