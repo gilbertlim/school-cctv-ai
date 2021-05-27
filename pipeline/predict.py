@@ -7,7 +7,7 @@ np.set_printoptions(precision=4, suppress=True)
 
 model = keras.models.load_model('./models/lstm_p1_punching_smoking_walking_running_angle.h5')
 
-classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running'}
+classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running', 4 : 'kicking'}
 
 class Predict(threading.Thread):
     def __init__(self, q_nparray):
