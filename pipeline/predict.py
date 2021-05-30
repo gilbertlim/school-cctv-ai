@@ -1,11 +1,13 @@
 import threading
 
 import numpy as np
+
+import tensorflow as tf
 from tensorflow import keras
 
 np.set_printoptions(precision=4, suppress=True)
-
-model = keras.models.load_model('./models/lstm_p1_punching_smoking_walking_running_angle.h5')
+with tf.device('/cpu:0'):
+    model = keras.models.load_model('./models/lstm_p1_walking_smoking_punching_running_kicking_angle.h5', compile = False)
 
 classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running', 4 : 'kicking'}
 
@@ -41,7 +43,8 @@ class Predict(threading.Thread):
             globals()['p_' +str(i)] = np.array(globals()['p_' +str(i)])
             globals()['p_' +str(i)] = globals()['p_' +str(i)].reshape(-1, 32, 8)
 
-            output = model.predict(globals()['p_' + str(i)])
+            with tf.device('/cpu:0'):
+                output = model.predict(globals()['p_' + str(i)])
             output = np.argmax(output[0], axis=-1)
             output = classes[int(output)]
             predicted.append(output)

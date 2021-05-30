@@ -1,5 +1,6 @@
 import os
 from queue import Queue
+import time
 
 try:
     from watchdog.observers import Observer
@@ -27,7 +28,7 @@ class Target:
         print('\n# Tracker : file tracker stared')
         try:
             while True:
-                pass
+                time.sleep(0.1)
         except:
             self.observer.stop()
             print("\n# Tracker : Error")

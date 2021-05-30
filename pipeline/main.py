@@ -26,7 +26,7 @@ class ThreadWithReturnValue(Thread):
 
 class Main:
     def __init__(self):
-        self.root = './'
+        self.root = '/home/ubuntu/CCTV/'
         self.v_path = self.root + 'videos/'
         self.j_path = self.root + 'json/'
 
@@ -44,14 +44,18 @@ class Main:
         self.makeDirectory() # Make directories
 
         # Thread 0 : Video file tracking
-        print('# Thread 0 : Video file tracking')
+        print('\n# Thread 0 : Video file tracking')
         tracker = Target(self.v_path)
         t0 = Thread(target=tracker.run)
+        t0.daemon = True
         t0.start()
 
+
         # Thread 1 : JSON file tracking
+        print('\n# Thread 1 : JSON file tracking')
         json_tracker = Target(self.j_path)
         t1 = Thread(target=json_tracker.run)
+        t1.daemon = True
         t1.start()
 
         while True:
@@ -64,9 +68,10 @@ class Main:
                 # Thread 2 : Extract json from videos
                 ext_json = Extractjson('../videos' + v_list[v_list.rfind('/'):])
                 t2 = Thread(target=ext_json.main)
+                t2.daemon = True
                 t2.start()
 
-            q_len_j =len(json_tracker.q_json.queue)
+            q_len_j = len(json_tracker.q_json.queue)
             if q_len_j == 1:
                 print('\n# Thread 1 : new json detected : ', json_tracker.q_json.queue)
 
@@ -87,8 +92,9 @@ class Main:
             twrv_predict = ThreadWithReturnValue(target=predict.main)
             twrv_predict.start()
 
-            if len(twrv_predict.join()) != 0:
-                self.q_predict.put(twrv_predict.join())
+            if twrv_predict.join() is not None:
+                if len(twrv_predict.join()) != 0:
+                    self.q_predict.put(twrv_predict.join())
 
             if len(self.q_predict.queue) >= 1:
                 predicted = self.q_predict.get()

@@ -20,6 +20,8 @@ class Preprocessing(threading.Thread):
                 keypoint = j.get('pose_keypoints_2d')
                 for i in range(len(keypoint)):  # x,y 좌표 뒤에 위치한 확률값 제외하고 가져오기
                     if i % 3 != 2:
+                        if result is None:
+                            print('result is None !!!!!!!!!!!!!!!!!!!!!!!!!!!')
                         result.append(keypoint[i])
                     else:
                         pass
