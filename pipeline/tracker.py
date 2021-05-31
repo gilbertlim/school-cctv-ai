@@ -28,7 +28,7 @@ class Target:
         print('\n# Tracker : file tracker stared')
         try:
             while True:
-                time.sleep(0.5)
+                time.sleep(1)
         except:
             self.observer.stop()
             print("\n# Tracker : Error")

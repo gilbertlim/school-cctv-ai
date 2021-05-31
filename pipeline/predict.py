@@ -33,11 +33,11 @@ class Predict(threading.Thread):
             nfpeople = max(nfpeople)
         # print('inputs', inputs)
 
-        # 사람 수에 따라 변수 선언(동적 변수)
+        # 사람 수에 따른 변수 선언(동적 변수)
         for i in range(nfpeople):
             globals()['p_' + str(i)] = []
 
-        # 사람별 데이터 분리(p_1, p_2, p_N, ...)
+        # 사람별 데이터 분리(p_0, p_1, ..., p_N)
         for ip in inputs:
             for i in range(len(ip)):
                 try:
@@ -49,14 +49,18 @@ class Predict(threading.Thread):
         predicted = []
         for i in range(nfpeople):
             globals()['p_' +str(i)] = np.array(globals()['p_' +str(i)])
-            globals()['p_' +str(i)] = globals()['p_' +str(i)].reshape(-1, 32, 8)
 
-            with tf.device('/cpu:0'):
-                output = model.predict(globals()['p_' + str(i)])
-            output = np.argmax(output[0], axis=-1)
-            output = classes[int(output)]
-            predicted.append(output)
+            if len(globals()['p_' +str(i)]) == 32:
+                globals()['p_' +str(i)] = globals()['p_' +str(i)].reshape(-1, 32, 8)
 
-        # print('predicted', predicted)
+                with tf.device('/cpu:0'):
+                    output = model.predict(globals()['p_' + str(i)])
+                output = np.argmax(output[0], axis=-1)
+                output = classes[int(output)]
+                predicted.append(output)
+
+                # print('predicted', predicted)
+            else:
+                del globals()['p_' + str(i)]
 
         return predicted

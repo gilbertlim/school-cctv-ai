@@ -24,12 +24,10 @@ openpose_for_mac.ipynb
 *.mp4
 *.avi
 
-# yolo
-yolo/
-
-
 # do not commit
 dncmt/
 
+# secret key
+secret.json
 
 
