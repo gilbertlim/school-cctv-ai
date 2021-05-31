@@ -26,7 +26,11 @@ class Predict(threading.Thread):
         if len(self.q_nparray.queue) >= 32:
             for i in range(32):
                 inputs.append(self.q_nparray.get())
-            nfpeople = len(inputs[0])
+
+            nfpeople = []
+            for i in inputs:
+                nfpeople.append(len(i))
+            nfpeople = max(nfpeople)
         # print('inputs', inputs)
 
         # 사람 수에 따라 변수 선언(동적 변수)
@@ -36,7 +40,11 @@ class Predict(threading.Thread):
         # 사람별 데이터 분리(p_1, p_2, p_N, ...)
         for ip in inputs:
             for i in range(len(ip)):
-                globals()['p_' +str(i)].append(ip[i])
+                try:
+                    if ip[i] is not None:
+                        globals()['p_' +str(i)].append(ip[i])
+                except KeyError as e:
+                    print('KeyError', ip, e)
 
         predicted = []
         for i in range(nfpeople):

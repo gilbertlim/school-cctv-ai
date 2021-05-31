@@ -39,17 +39,32 @@ class Main:
             os.mkdir(self.root + 'json')
         if not os.path.isdir(self.root + 'videos'):
             os.mkdir(self.root + 'videos')
+        if not os.path.isdir(self.root + 'old_videos'):
+            os.mkdir(self.root + 'old_videos')
+
+    def findProcess(self):
+        import psutil
+        for proc in psutil.process_iter():
+            try:
+                processName = proc.name() # read process name
+                if processName[:39] == "./build/examples/openpose/openpose.bin":
+                    return 'running'
+                else:
+                    return 'empty'
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+
+        # print('동일 프로세스 확인 완료....')
 
     def main(self):
         self.makeDirectory() # Make directories
 
         # Thread 0 : Video file tracking
         print('\n# Thread 0 : Video file tracking')
-        tracker = Target(self.v_path)
-        t0 = Thread(target=tracker.run)
+        video_tracker = Target(self.v_path)
+        t0 = Thread(target=video_tracker.run)
         t0.daemon = True
         t0.start()
-
 
         # Thread 1 : JSON file tracking
         print('\n# Thread 1 : JSON file tracking')
@@ -59,23 +74,26 @@ class Main:
         t1.start()
 
         while True:
-            q_len_n = len(tracker.q_video.queue)
-            if q_len_n == 1:
-                print('\n# Thread 0 : new video detected : ', tracker.q_video.queue)
+            q_len_n = len(video_tracker.q_video.queue)
 
-                v_list = tracker.q_video.get()
+            if q_len_n == 2:
+                cur_process = self.findProcess()
 
-                # Thread 2 : Extract json from videos
-                ext_json = Extractjson('../videos' + v_list[v_list.rfind('/'):])
-                t2 = Thread(target=ext_json.main)
-                t2.daemon = True
-                t2.start()
+                if cur_process == 'empty':
+                    v_list = video_tracker.q_video.get()
+
+                    # Thread 2 : Extract json from videos
+                    ext_json = Extractjson('../videos' + v_list[v_list.rfind('/'):])
+                    t2 = Thread(target=ext_json.main)
+                    t2.daemon = True
+                    t2.start()
+
+                else:
+                    print('\n openpose is already running')
 
             q_len_j = len(json_tracker.q_json.queue)
             if q_len_j == 1:
-                print('\n# Thread 1 : new json detected : ', json_tracker.q_json.queue)
-
-                j_list = tracker.q_json.get()
+                j_list = json_tracker.q_json.get()
 
                 # Thread 3 : Convert json to Numpy Array
                 prep = Preprocessing(j_list)

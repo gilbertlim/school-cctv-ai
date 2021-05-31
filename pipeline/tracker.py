@@ -28,7 +28,7 @@ class Target:
         print('\n# Tracker : file tracker stared')
         try:
             while True:
-                time.sleep(0.1)
+                time.sleep(0.5)
         except:
             self.observer.stop()
             print("\n# Tracker : Error")
@@ -44,8 +44,10 @@ class Handler(FileSystemEventHandler):
     def on_created(self, event):  # create
         if event.src_path.split('.')[-1] == 'mp4':
             Target.q_video.put(event.src_path)
+            print('\n# Thread 0, new video detected : ', event.src_path)
         elif event.src_path.split('.')[-1] == 'json':
             Target.q_json.put(event.src_path)
+            print('\n# Thread 1, new json detected : ', event.src_path)
         # print(Target.q.queue)
 
     def on_deleted(self, event):  # delete
