@@ -55,8 +55,6 @@ class Main:
                             aws_secret_access_key=self.access_key,
                             region_name=self.region_name
                             )  # S3 클라이언트 생성
-        bucket_name = self.bucket_name  # 업로드할 S3 버킷
-
         return s3
 
     def initDirectory(self):
@@ -68,22 +66,6 @@ class Main:
         os.system('sudo rm ./json/*')
         os.system('sudo rm ./videos/*')
         os.system('sudo rm ./temp/*')
-
-    # def findProcess(self):
-    #     state = 'empty'
-    #
-    #     for proc in psutil.process_iter():
-    #         try:
-    #             processName = proc.name() # read process name
-    #             if processName[:39] == "./build/examples/openpose/openpose.bin":
-    #                 state = 'running'
-    #                 break
-    #             else:
-    #                 state =  'empty'
-    #         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-    #             pass
-    #
-    #     return state
 
     def uploadResults(self, s3, bucket_name, num, action):
             save_time = datetime.datetime.now()
@@ -169,17 +151,6 @@ class Main:
 
                 if len(act) == nfpeople:
                     action = '정상'
-
-
-                # for a in assault:
-                #     if a in predicted:
-                #         action = '폭행'
-                # for s in smoking:
-                #     if s in predicted:
-                #         action = '흡연'
-                # for n in normal:
-                #     if n in predicted:
-                #         action = '정상'
 
                 print('\n----------------------------------------------------------------\n# Thread 4 :', action, '\n----------------------------------------------------------------')
 

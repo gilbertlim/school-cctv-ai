@@ -7,7 +7,8 @@ from tensorflow import keras
 
 np.set_printoptions(precision=4, suppress=True)
 with tf.device('/cpu:0'):
-    model = keras.models.load_model('./models/lstm_p1_walking_smoking_punching_running_kicking_angle.h5', compile = False)
+    model_path = './models/lstm_1_june_16_50.h5'
+    model = keras.models.load_model(model_path)
 
 classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running', 4 : 'kicking'}
 
