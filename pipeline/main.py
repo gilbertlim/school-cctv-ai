@@ -37,16 +37,17 @@ class Main:
         self.q_nparray = Queue()
         self.q_predict = Queue()
 
-        self.s3, self.bucket_name = self.connectBoto()
-        self.num = 1
-
         self.secret_file = 'secret.json'
         with open(self.secret_file) as f:
-            secrets = json.load(f.read())
+            secrets = json.load(f)
+
             self.access_id = secrets['aws_access_key_id']
             self.access_key = secrets['aws_secret_access_key']
             self.region_name = secrets['region_name']
             self.bucket_name = secrets['bucket_name']
+
+        self.s3 = self.connectBoto()
+        self.num = 1
 
     def connectBoto(self):
         s3 = boto3.resource('s3',
@@ -56,7 +57,7 @@ class Main:
                             )  # S3 클라이언트 생성
         bucket_name = self.bucket_name  # 업로드할 S3 버킷
 
-        return s3, bucket_name
+        return s3
 
     def initDirectory(self):
         if not os.path.isdir(self.root + 'json'):
