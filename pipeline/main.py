@@ -140,13 +140,13 @@ class Main:
                 nfpeople = len(predicted)
                 act = []
                 for pred in predicted:
-                    if pred == 'punching' or pred == 'kicking':
+                    if pred == 'punching':
                         action = '폭행'
                         break
                     if pred == 'smoking':
                         action = '흡연'
                         break
-                    if pred == 'walking' or pred == 'running':
+                    if pred == 'walking' or pred == 'running' or pred == 'standing':
                         act.append('normal')
 
                 if len(act) == nfpeople:

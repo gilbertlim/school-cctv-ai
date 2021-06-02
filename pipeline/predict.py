@@ -7,10 +7,10 @@ from tensorflow import keras
 
 np.set_printoptions(precision=4, suppress=True)
 with tf.device('/cpu:0'):
-    model_path = './models/lstm_1_june_16_50.h5'
+    model_path = './models/lstm_2_june_17_01.h5'
     model = keras.models.load_model(model_path)
 
-classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running', 4 : 'kicking'}
+classes = {0 : 'walking', 1 : 'smoking', 2: 'punching', 3 : 'running', 4 : 'standing'}
 
 class Predict(threading.Thread):
     def __init__(self, q_nparray):
