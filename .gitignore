@@ -14,12 +14,13 @@ datasets/
 # models
 models/
 
-# preprocessing folder
-/pipeline/videos/
-/pipeline/json/
-/pipeline/openpose/
+# preprocessing data
+/serving/videos/
+/serving/json/
+/serving/openpose/
 
 # open pose
+openpose/
 openpose_for_mac.ipynb
 *.mp4
 *.avi
@@ -29,5 +30,6 @@ dncmt/
 
 # secret key
 secret.json
+
 
 
